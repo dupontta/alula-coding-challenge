@@ -36,10 +36,14 @@ app.get('/asteroids', (req, res) => {
 
     // check that the within value is there so we can filter
     if (inputData?.within?.value) {
-        if (inputData.within.value > 0) {
-            withinValue = inputData.within.value;
+        if (!isNaN(inputData.within.value)) {
+            if (inputData.within.value > 0) {
+                withinValue = inputData.within.value;
+            } else {
+                throw new Error('Within value is negative, must be greater than 0.');
+            }
         } else {
-            throw new Error('Within value is negative, must be greater than 0.');
+            throw new Error('Within value is not a number.');
         }
     } else {
         throw new Error('Within value(s) missing.');
@@ -64,7 +68,6 @@ app.get('/asteroids', (req, res) => {
                 res.send(asteroids);
             })
             .catch((err) => {
-                res.status(500).send(err.message);
                 throw new Error(err.response.data.message);
             });
     } else {
@@ -77,7 +80,6 @@ app.get('/asteroids', (req, res) => {
                 res.send(asteroids);
             })
             .catch((err) => {
-                res.status(500).send(err.message);
                 throw new Error(err.response.data.message);
             });
     }
